@@ -27,7 +27,7 @@ public class KafkaTopicWatching<T> {
         Map.of(
             ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
             ConsumerConfig.GROUP_ID_CONFIG, "tc-" + UUID.randomUUID(),
-            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"
+            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"
         ),
         new StringDeserializer(),
         valueDeserializer

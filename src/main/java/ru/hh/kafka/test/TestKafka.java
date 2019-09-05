@@ -21,7 +21,8 @@ public class TestKafka {
     this.producer = new KafkaProducer<>(
         Map.of(
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaContainer.getBootstrapServers(),
-            ProducerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString()
+            ProducerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString(),
+            ProducerConfig.ACKS_CONFIG, "all"
         ),
         new StringSerializer(), new ByteArraySerializer()
     );
