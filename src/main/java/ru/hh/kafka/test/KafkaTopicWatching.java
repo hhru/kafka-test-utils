@@ -4,11 +4,11 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
@@ -20,6 +20,7 @@ public class KafkaTopicWatching<T> {
   private static Duration DEFAULT_GET_MESSAGES_TIMEOUT = Duration.ofMillis(750);
 
   private final KafkaConsumer<String, T> consumer;
+  private final Map<TopicPartition, Long> topicPartitionsOffsets;
 
   protected KafkaTopicWatching(String topic, String bootstrapServers, Deserializer<T> valueDeserializer) {
     consumer = new KafkaConsumer<>(
@@ -32,9 +33,8 @@ public class KafkaTopicWatching<T> {
         valueDeserializer
     );
     consumer.subscribe(List.of(topic));
-    consumer.seekToEnd(Set.of());
-    consumer.commitSync(COMMIT_TIMEOUT);
     consumer.poll(POLL_TIMEOUT);
+    topicPartitionsOffsets = consumer.endOffsets(consumer.assignment());
   }
 
   public List<T> getNextMessages() {
@@ -50,6 +50,7 @@ public class KafkaTopicWatching<T> {
   }
 
   public List<T> getNextMessages(Duration timeout, int expectedCount) {
+    topicPartitionsOffsets.forEach(consumer::seek);
     long startTime = System.currentTimeMillis();
     List<T> foundMessages = new ArrayList<>();
     while (System.currentTimeMillis() - startTime < timeout.toMillis() && foundMessages.size() < expectedCount) {
@@ -59,8 +60,11 @@ public class KafkaTopicWatching<T> {
         continue;
       }
 
-      records.forEach(record -> foundMessages.add(record.value()));
-      consumer.commitSync(COMMIT_TIMEOUT);
+      records.forEach(record -> {
+        foundMessages.add(record.value());
+        topicPartitionsOffsets.computeIfPresent(new TopicPartition(record.topic(), record.partition()), (partition, oldOffset) -> oldOffset + 1);
+      });
+      topicPartitionsOffsets.forEach(consumer::seek);
     }
     return foundMessages;
   }

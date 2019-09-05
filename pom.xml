@@ -6,7 +6,7 @@
     <parent>
         <groupId>ru.headhunter.commons</groupId>
         <artifactId>common-pom</artifactId>
-        <version>1.35</version>
+        <version>1.37</version>
     </parent>
 
     <groupId>ru.hh.kafka.test</groupId>
@@ -45,7 +45,7 @@
             <version>5.5.1</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -59,12 +59,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.1</version>
             </plugin>
 
             <plugin>
@@ -96,7 +94,6 @@
 
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>

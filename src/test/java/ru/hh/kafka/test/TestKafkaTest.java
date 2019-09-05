@@ -3,7 +3,7 @@ package ru.hh.kafka.test;
 import java.util.List;
 import java.util.UUID;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +34,8 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, MESSAGE_CREATED_BEFORE_WATCHING_START);
     var expectedMessage = new String(MESSAGE_CREATED_BEFORE_WATCHING_START);
     List<String> nextMessages = topicWatching.getNextMessages();
-    Assertions.assertEquals(1, nextMessages.size());
-    Assertions.assertEquals(expectedMessage, nextMessages.get(0));
+    assertEquals(1, nextMessages.size());
+    assertEquals(expectedMessage, nextMessages.get(0));
   }
 
   @Test
@@ -48,7 +48,7 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, MESSAGE_CREATED_AFTER_WATCHING_START);
 
     List<String> nextMessages = topicWatching.getNextMessages(4);
-    Assertions.assertEquals(4, nextMessages.size());
+    assertEquals(4, nextMessages.size());
   }
 
   @Test
@@ -59,7 +59,7 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, MESSAGE_CREATED_BEFORE_WATCHING_START);
 
     KafkaTopicWatching<String> topicWatching = getTopicWatching();
-    Assertions.assertEquals(0, topicWatching.getNextMessages().size());
+    assertEquals(0, topicWatching.getNextMessages().size());
   }
 
   @Test
@@ -78,11 +78,11 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, message1);
 
     List<String> nextMessages1 = topicWatching.getNextMessages(4);
-    Assertions.assertEquals(4, nextMessages1.size());
-    Assertions.assertEquals(expectedMessage1, nextMessages1.get(0));
-    Assertions.assertEquals(expectedMessage1, nextMessages1.get(1));
-    Assertions.assertEquals(expectedMessage1, nextMessages1.get(2));
-    Assertions.assertEquals(expectedMessage1, nextMessages1.get(3));
+    assertEquals(4, nextMessages1.size());
+    assertEquals(expectedMessage1, nextMessages1.get(0));
+    assertEquals(expectedMessage1, nextMessages1.get(1));
+    assertEquals(expectedMessage1, nextMessages1.get(2));
+    assertEquals(expectedMessage1, nextMessages1.get(3));
 
     var message2 = "message created after watching 2".getBytes();
     var expectedMessage2 = new String(message2);
@@ -92,11 +92,11 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, message2);
 
     List<String> nextMessages2 = topicWatching.getNextMessages(4);
-    Assertions.assertEquals(4, nextMessages2.size());
-    Assertions.assertEquals(expectedMessage2, nextMessages2.get(0));
-    Assertions.assertEquals(expectedMessage2, nextMessages2.get(1));
-    Assertions.assertEquals(expectedMessage2, nextMessages2.get(2));
-    Assertions.assertEquals(expectedMessage2, nextMessages2.get(3));
+    assertEquals(4, nextMessages2.size());
+    assertEquals(expectedMessage2, nextMessages2.get(0));
+    assertEquals(expectedMessage2, nextMessages2.get(1));
+    assertEquals(expectedMessage2, nextMessages2.get(2));
+    assertEquals(expectedMessage2, nextMessages2.get(3));
   }
 
   private KafkaTopicWatching<String> getTopicWatching() {

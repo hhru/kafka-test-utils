@@ -9,9 +9,9 @@
 ```
 
 @Bean
-  public TestKafkaWithJsonMessages testKafka() {
-    return KafkaTestUtils.startTestKafkaWithJsonMessages(KafkaSiteObjectMapperFactory.createObjectMapper());
-  }
+public TestKafkaWithJsonMessages testKafka() {
+  return KafkaTestUtils.startTestKafkaWithJsonMessages(KafkaSiteObjectMapperFactory.createObjectMapper());
+}
 
 // рассчитываем, что consumer/producer читают настройку "kafka.common.bootstrap.servers" для коннекта к кафке.
 @Bean
