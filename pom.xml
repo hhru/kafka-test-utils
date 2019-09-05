@@ -10,7 +10,7 @@
 
     <groupId>ru.hh.kafka.test</groupId>
     <artifactId>hh-kafka-test-utils</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -105,7 +105,7 @@
     <scm>
         <connection>scm:git:git@github.com:hhru/hh-java-libs.git</connection>
         <developerConnection>scm:git:git@github.com:hhru/hh-java-libs.git</developerConnection>
-        <tag>cassandra-test-utils-0.0.1</tag>
+        <tag>hh-kafka-test-utils-0.0.2</tag>
     </scm>
 
 </project>
