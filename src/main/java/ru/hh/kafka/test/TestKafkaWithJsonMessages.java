@@ -3,16 +3,32 @@ package ru.hh.kafka.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.Map;
 import org.apache.kafka.common.serialization.Deserializer;
-import org.testcontainers.containers.KafkaContainer;
 
 public class TestKafkaWithJsonMessages extends TestKafka {
-
   private final ObjectMapper objectMapper;
 
-  TestKafkaWithJsonMessages(KafkaContainer kafkaContainer, ObjectMapper objectMapper) {
-    super(kafkaContainer);
+  public TestKafkaWithJsonMessages(String bootstrapServers,
+                                   Map<String, Object> consumerConfigsOverwrite,
+                                   Map<String, Object> producerConfigsOverwrite,
+                                   Duration consumerPoolTimeout,
+                                   ObjectMapper objectMapper) {
+    super(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, consumerPoolTimeout);
     this.objectMapper = objectMapper;
+  }
+
+  public TestKafkaWithJsonMessages(String bootstrapServers,
+                                   Map<String, Object> consumerConfigsOverwrite,
+                                   Map<String, Object> producerConfigsOverwrite,
+                                   ObjectMapper objectMapper) {
+    super(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite);
+    this.objectMapper = objectMapper;
+  }
+
+  public <T> KafkaTopicWatching<T> startJsonTopicWatching(String topic, Class<T> messageClass, Duration getMessagesTimeout) {
+    return startTopicWatching(topic, getJsonClassDeserializer(messageClass), getMessagesTimeout);
   }
 
   public <T> KafkaTopicWatching<T> startJsonTopicWatching(String topic, Class<T> messageClass) {

@@ -20,7 +20,8 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
 
   @BeforeAll
   void setUpTestKafka() {
-    testKafkaWithJsonMessages = KafkaTestUtils.startTestKafkaWithJsonMessages(kafkaContainer, new ObjectMapper());
+    testKafkaWithJsonMessages = KafkaTestUtils.connectToKafkaWithJsonMessages(kafkaContainer.getBootstrapServers(),
+        Map.of(), Map.of(), new ObjectMapper());
   }
 
   @BeforeEach

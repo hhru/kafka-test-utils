@@ -1,6 +1,7 @@
 package ru.hh.kafka.test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +20,7 @@ public class TestKafkaTest extends TestBase {
 
   @BeforeAll
   void setUpTestKafka() {
-    testKafka = KafkaTestUtils.startTestKafka(kafkaContainer);
+    testKafka = KafkaTestUtils.connectToKafka(kafkaContainer.getBootstrapServers(), Map.of(), Map.of());
   }
 
   @BeforeEach
