@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,23 +13,24 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 public class TestKafka {
-  private static Duration DEFAULT_POLL_TIMEOUT = Duration.ofMillis(250);
+
+  private static Duration DEFAULT_GET_MESSAGES_TIMEOUT = Duration.ofMillis(2000);
 
   private final String bootstrapServers;
   private final Map<String, Object> consumerConfigsOverwrite;
   private final KafkaProducer<String, byte[]> producer;
-  private final Duration consumerPoolTimeout;
+  private final Duration defaultMonitoringGetMessageTimeout;
 
   TestKafka(String bootstrapServers, Map<String, Object> consumerConfigsOverwrite, Map<String, Object> producerConfigsOverwrite,
-            Duration consumerPoolTimeout) {
+            Duration defaultTopicMonitoringGetMessageTimeout) {
     this.bootstrapServers = bootstrapServers;
     this.consumerConfigsOverwrite = Map.copyOf(consumerConfigsOverwrite);
     this.producer = new KafkaProducer<>(getProducerConfigs(producerConfigsOverwrite), new StringSerializer(), new ByteArraySerializer());
-    this.consumerPoolTimeout = consumerPoolTimeout;
+    this.defaultMonitoringGetMessageTimeout = defaultTopicMonitoringGetMessageTimeout;
   }
 
   TestKafka(String bootstrapServers, Map<String, Object> consumerConfigsOverwrite, Map<String, Object> producerConfigsOverwrite) {
-    this(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, DEFAULT_POLL_TIMEOUT);
+    this(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, DEFAULT_GET_MESSAGES_TIMEOUT);
   }
 
   public void sendMessage(String topic, byte[] message) {
@@ -38,22 +38,16 @@ public class TestKafka {
   }
 
   public void sendMessage(String topic, String key, byte[] message) {
-    try {
-      producer.send(new ProducerRecord<>(topic, key, message)).get();
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      throw new RuntimeException(e);
-    } catch (ExecutionException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public <T> KafkaTopicWatching<T> startTopicWatching(String topicName, Deserializer<T> messageDeserializer, Duration getMessagesTimeout) {
-    return new KafkaTopicWatching<>(topicName, getConsumerConfigs(), messageDeserializer, consumerPoolTimeout, getMessagesTimeout);
+    producer.send(new ProducerRecord<>(topic, key, message));
+    producer.flush();
   }
 
   public <T> KafkaTopicWatching<T> startTopicWatching(String topicName, Deserializer<T> messageDeserializer) {
-    return startTopicWatching(topicName, messageDeserializer, consumerPoolTimeout.multipliedBy(3).plusMillis(10));
+    return startTopicWatching(topicName, messageDeserializer, defaultMonitoringGetMessageTimeout);
+  }
+
+  public <T> KafkaTopicWatching<T> startTopicWatching(String topicName, Deserializer<T> messageDeserializer, Duration getMessagesTimeout) {
+    return new KafkaTopicWatching<>(topicName, getConsumerConfigs(), messageDeserializer, getMessagesTimeout);
   }
 
   private Map<String, Object> getProducerConfigs(Map<String, Object> producerConfigsOverwrite) {

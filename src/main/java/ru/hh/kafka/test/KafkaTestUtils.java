@@ -20,8 +20,8 @@ public class KafkaTestUtils {
   public static TestKafka connectToKafka(String bootstrapServers,
                                          Map<String, Object> consumerConfigsOverwrite,
                                          Map<String, Object> producerConfigsOverwrite,
-                                         Duration consumerPoolTimeout) {
-    return new TestKafka(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, consumerPoolTimeout);
+                                         Duration defaultTopicMonitoringGetMessageTimeout) {
+    return new TestKafka(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, defaultTopicMonitoringGetMessageTimeout);
   }
 
   public static TestKafka connectToKafka(String bootstrapServers,
@@ -37,9 +37,11 @@ public class KafkaTestUtils {
   public static TestKafkaWithJsonMessages connectToKafkaWithJsonMessages(String bootstrapServers,
                                                                          Map<String, Object> consumerConfigsOverwrite,
                                                                          Map<String, Object> producerConfigsOverwrite,
-                                                                         Duration consumerPoolTimeout,
+                                                                         Duration defaultTopicMonitoringGetMessageTimeout,
                                                                          ObjectMapper objectMapper) {
-    return new TestKafkaWithJsonMessages(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, consumerPoolTimeout, objectMapper);
+    return new TestKafkaWithJsonMessages(
+        bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, defaultTopicMonitoringGetMessageTimeout, objectMapper
+    );
   }
 
   public static TestKafkaWithJsonMessages connectToKafkaWithJsonMessages(String bootstrapServers,

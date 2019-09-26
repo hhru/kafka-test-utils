@@ -13,9 +13,9 @@ public class TestKafkaWithJsonMessages extends TestKafka {
   public TestKafkaWithJsonMessages(String bootstrapServers,
                                    Map<String, Object> consumerConfigsOverwrite,
                                    Map<String, Object> producerConfigsOverwrite,
-                                   Duration consumerPoolTimeout,
+                                   Duration defaultTopicMonitoringGetMessageTimeout,
                                    ObjectMapper objectMapper) {
-    super(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, consumerPoolTimeout);
+    super(bootstrapServers, consumerConfigsOverwrite, producerConfigsOverwrite, defaultTopicMonitoringGetMessageTimeout);
     this.objectMapper = objectMapper;
   }
 

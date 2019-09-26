@@ -36,7 +36,7 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
     var expectedMessage = MESSAGE_CREATED_BEFORE_WATCHING_START;
     testKafkaWithJsonMessages.sendMessage(testTopic, expectedMessage);
 
-    List<Map> nextMessages = topicWatching.getNextMessages();
+    List<Map> nextMessages = topicWatching.poolNextMessages();
     assertEquals(1, nextMessages.size());
     assertEquals(expectedMessage, nextMessages.get(0));
   }
@@ -50,7 +50,7 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
     testKafkaWithJsonMessages.sendMessage(testTopic, MESSAGE_CREATED_AFTER_WATCHING_START);
     testKafkaWithJsonMessages.sendMessage(testTopic, MESSAGE_CREATED_AFTER_WATCHING_START);
 
-    List<Map> nextMessages = topicWatching.getNextMessages(4);
+    List<Map> nextMessages = topicWatching.poolNextMessages(4);
     assertEquals(4, nextMessages.size());
   }
 
@@ -62,7 +62,7 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
     testKafkaWithJsonMessages.sendMessage(testTopic, MESSAGE_CREATED_BEFORE_WATCHING_START);
 
     KafkaTopicWatching<Map> topicWatching = testKafkaWithJsonMessages.startJsonTopicWatching(testTopic, Map.class);
-    assertEquals(0, topicWatching.getNextMessages().size());
+    assertEquals(0, topicWatching.poolNextMessages().size());
   }
 
   @Test
@@ -79,7 +79,7 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
     testKafkaWithJsonMessages.sendMessage(testTopic, message1);
     testKafkaWithJsonMessages.sendMessage(testTopic, message1);
 
-    List<Map> nextMessages1 = topicWatching.getNextMessages(4);
+    List<Map> nextMessages1 = topicWatching.poolNextMessages(4);
     assertEquals(4, nextMessages1.size());
     assertEquals(message1, nextMessages1.get(0));
     assertEquals(message1, nextMessages1.get(1));
@@ -92,7 +92,7 @@ public class TestKafkaWithJsonMessagesTest extends TestBase {
     testKafkaWithJsonMessages.sendMessage(testTopic, message2);
     testKafkaWithJsonMessages.sendMessage(testTopic, message2);
 
-    List<Map> nextMessages2 = topicWatching.getNextMessages(4);
+    List<Map> nextMessages2 = topicWatching.poolNextMessages(4);
     assertEquals(4, nextMessages2.size());
     assertEquals(message2, nextMessages2.get(0));
     assertEquals(message2, nextMessages2.get(1));
