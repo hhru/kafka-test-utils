@@ -22,7 +22,7 @@ public class TestKafkaTest extends TestBase {
 
   @BeforeAll
   void setUpTestKafka() {
-    testKafka = KafkaTestUtils.connectToKafka(kafkaContainer.getBootstrapServers(), Map.of(), Map.of(), Duration.ofMillis(1));
+    testKafka = KafkaTestUtils.connectToKafka(kafkaContainer.getBootstrapServers(), Map.of(), Map.of());
   }
 
   @BeforeEach
@@ -134,7 +134,7 @@ public class TestKafkaTest extends TestBase {
   }
 
   private KafkaTopicWatching<String> getTopicWatching() {
-    return testKafka.startTopicWatching(testTopic, new StringDeserializer(), Duration.ofMillis(500));
+    return testKafka.startTopicWatching(testTopic, new StringDeserializer());
   }
 
 }

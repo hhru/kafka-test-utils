@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -16,9 +17,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 public class KafkaTopicWatching<T> {
 
-  private static final Duration ASSIGNMENT_ENSURE_POOL_TIMEOUT = Duration.ofMillis(1);
   private static final Duration GET_MESSAGES_POOL_TIMEOUT = Duration.ofMillis(100);
-  private static final int ASSIGNMENT_ENSURE_MAX_TRIES = 5000;
 
   private final KafkaConsumer<String, T> consumer;
   private final Map<TopicPartition, Long> topicPartitionsOffsets;
@@ -28,20 +27,15 @@ public class KafkaTopicWatching<T> {
   KafkaTopicWatching(String topic, Map<String, Object> consumerConfig, Deserializer<T> valueDeserializer, Duration defaultGetMessagesTimeout) {
     this.defaultGetMessagesTimeout = defaultGetMessagesTimeout;
     this.consumer = new KafkaConsumer<>(consumerConfig, new StringDeserializer(), valueDeserializer);
-    this.consumer.subscribe(List.of(topic));
-    ensureConsumerAssignment();
+
+    List<TopicPartition> allTopicPartitions = this.consumer.partitionsFor(topic).stream()
+        .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))
+        .collect(Collectors.toList());
+
+    this.consumer.assign(allTopicPartitions);
     this.topicPartitionsOffsets = consumer.endOffsets(consumer.assignment());
     if (topicPartitionsOffsets.isEmpty()) {
       throw new IllegalStateException("failed to assign consumer to kafka partitions");
-    }
-  }
-
-  private void ensureConsumerAssignment() {
-    for (int i = 0; i < ASSIGNMENT_ENSURE_MAX_TRIES; i++) {
-      this.consumer.poll(ASSIGNMENT_ENSURE_POOL_TIMEOUT);
-      if (!this.consumer.assignment().isEmpty()) {
-        break;
-      }
     }
   }
 
