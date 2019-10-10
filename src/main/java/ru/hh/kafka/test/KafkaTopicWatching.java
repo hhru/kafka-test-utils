@@ -18,7 +18,7 @@ public class KafkaTopicWatching<T> {
 
   private static final Duration ASSIGNMENT_ENSURE_POOL_TIMEOUT = Duration.ofMillis(1);
   private static final Duration GET_MESSAGES_POOL_TIMEOUT = Duration.ofMillis(100);
-  private static final int ASSIGNMENT_ENSURE_MAX_TRIES = 2000;
+  private static final int ASSIGNMENT_ENSURE_MAX_TRIES = 5000;
 
   private final KafkaConsumer<String, T> consumer;
   private final Map<TopicPartition, Long> topicPartitionsOffsets;
