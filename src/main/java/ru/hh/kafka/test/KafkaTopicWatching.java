@@ -19,17 +19,19 @@ public class KafkaTopicWatching<T> {
 
   private static final Duration GET_MESSAGES_POOL_TIMEOUT = Duration.ofMillis(100);
 
+  private final String topicName;
   private final KafkaConsumer<String, T> consumer;
   private final Map<TopicPartition, Long> topicPartitionsOffsets;
   private final Duration defaultGetMessagesTimeout;
   private final List<T> allFoundMessages = new ArrayList<>();
 
-  KafkaTopicWatching(String topic, Map<String, Object> consumerConfig, Deserializer<T> valueDeserializer, Duration defaultGetMessagesTimeout) {
+  KafkaTopicWatching(String topicName, Map<String, Object> consumerConfig, Deserializer<T> valueDeserializer, Duration defaultGetMessagesTimeout) {
+    this.topicName = topicName;
     this.defaultGetMessagesTimeout = defaultGetMessagesTimeout;
     this.consumer = new KafkaConsumer<>(consumerConfig, new StringDeserializer(), valueDeserializer);
 
-    List<TopicPartition> allTopicPartitions = this.consumer.partitionsFor(topic).stream()
-        .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))
+    List<TopicPartition> allTopicPartitions = this.consumer.partitionsFor(topicName).stream()
+        .map(partitionInfo -> new TopicPartition(topicName, partitionInfo.partition()))
         .collect(Collectors.toList());
 
     this.consumer.assign(allTopicPartitions);
@@ -41,6 +43,10 @@ public class KafkaTopicWatching<T> {
 
   public List<T> getAllFoundMessages() {
     return List.copyOf(allFoundMessages);
+  }
+
+  public String getTopicName() {
+    return topicName;
   }
 
   public List<T> poolNextMessages() {
