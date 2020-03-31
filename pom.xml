@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.headhunter.commons</groupId>
-        <artifactId>common-pom</artifactId>
-        <version>1.37</version>
+        <groupId>ru.hh.public-pom</groupId>
+        <artifactId>public-pom</artifactId>
+        <version>1.41</version>
     </parent>
 
     <groupId>ru.hh.kafka.test</groupId>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
+            <version>2.9.10.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -102,10 +102,24 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>hh-public</id>
+            <name>hh public releases repository</name>
+            <url>http://m2.hh.ru/content/repositories/public-releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <scm>
-        <connection>scm:git:git@github.com:hhru/hh-java-libs.git</connection>
-        <developerConnection>scm:git:git@github.com:hhru/hh-java-libs.git</developerConnection>
-        <tag>cassandra-test-utils-0.0.1</tag>
+        <connection>scm:git:git@github.com:hhru/kafka-test-utils.git</connection>
+        <developerConnection>scm:git:git@github.com:hhru/kafka-test-utils.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
