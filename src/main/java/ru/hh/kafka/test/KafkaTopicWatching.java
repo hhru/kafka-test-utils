@@ -42,7 +42,7 @@ public class KafkaTopicWatching<T> {
   }
 
   public List<T> getAllFoundMessages() {
-    return List.copyOf(allFoundMessages);
+    return new ArrayList<>(allFoundMessages);
   }
 
   public String getTopicName() {

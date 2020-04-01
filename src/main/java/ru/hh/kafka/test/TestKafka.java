@@ -24,7 +24,7 @@ public class TestKafka {
   TestKafka(String bootstrapServers, Map<String, Object> consumerConfigsOverwrite, Map<String, Object> producerConfigsOverwrite,
             Duration defaultTopicMonitoringGetMessageTimeout) {
     this.bootstrapServers = bootstrapServers;
-    this.consumerConfigsOverwrite = Map.copyOf(consumerConfigsOverwrite);
+    this.consumerConfigsOverwrite = new HashMap<>(consumerConfigsOverwrite);
     this.producer = new KafkaProducer<>(getProducerConfigs(producerConfigsOverwrite), new StringSerializer(), new ByteArraySerializer());
     this.defaultMonitoringGetMessageTimeout = defaultTopicMonitoringGetMessageTimeout;
   }
@@ -65,19 +65,19 @@ public class TestKafka {
   }
 
   private Map<String, Object> getDefaultProducerConfigs() {
-    return Map.of(
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers(),
-        ProducerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString(),
-        ProducerConfig.ACKS_CONFIG, "all"
-    );
+    Map<String, Object> config = new HashMap<>();
+    config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
+    config.put(ProducerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
+    config.put(ProducerConfig.ACKS_CONFIG, "all");
+    return config;
   }
 
   private Map<String, Object> getDefaultConsumerConfigs() {
-    return Map.of(
-        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers(),
-        ConsumerConfig.GROUP_ID_CONFIG, "tc-" + UUID.randomUUID().toString(),
-        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"
-    );
+    Map<String, Object> config = new HashMap<>();
+    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
+    config.put(ConsumerConfig.GROUP_ID_CONFIG, "tc-" + UUID.randomUUID().toString());
+    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+    return config;
   }
 
   public String getBootstrapServers() {

@@ -2,6 +2,7 @@ package ru.hh.kafka.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
+import static java.util.Collections.emptyMap;
 import java.util.Map;
 import org.testcontainers.containers.KafkaContainer;
 
@@ -14,7 +15,7 @@ public class KafkaTestUtils {
   }
 
   public static TestKafka startKafka() {
-    return connectToKafka(startKafkaContainer().getBootstrapServers(), Map.of(), Map.of());
+    return connectToKafka(startKafkaContainer().getBootstrapServers(), emptyMap(), emptyMap());
   }
 
   public static TestKafka connectToKafka(String bootstrapServers,
@@ -31,7 +32,7 @@ public class KafkaTestUtils {
   }
 
   public static TestKafkaWithJsonMessages startKafkaWithJsonMessages(ObjectMapper objectMapper) {
-    return connectToKafkaWithJsonMessages(startKafkaContainer().getBootstrapServers(), Map.of(), Map.of(), objectMapper);
+    return connectToKafkaWithJsonMessages(startKafkaContainer().getBootstrapServers(), emptyMap(), emptyMap(), objectMapper);
   }
 
   public static TestKafkaWithJsonMessages connectToKafkaWithJsonMessages(String bootstrapServers,

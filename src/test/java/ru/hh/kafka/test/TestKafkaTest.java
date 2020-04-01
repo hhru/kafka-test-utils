@@ -1,8 +1,8 @@
 package ru.hh.kafka.test;
 
 import java.time.Duration;
+import static java.util.Collections.emptyMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +22,7 @@ public class TestKafkaTest extends TestBase {
 
   @BeforeAll
   void setUpTestKafka() {
-    testKafka = KafkaTestUtils.connectToKafka(kafkaContainer.getBootstrapServers(), Map.of(), Map.of());
+    testKafka = KafkaTestUtils.connectToKafka(kafkaContainer.getBootstrapServers(), emptyMap(), emptyMap());
   }
 
   @BeforeEach
@@ -35,7 +35,7 @@ public class TestKafkaTest extends TestBase {
     KafkaTopicWatching<String> topicWatching = getTopicWatching();
 
     testKafka.sendMessage(testTopic, MESSAGE_CREATED_BEFORE_WATCHING_START);
-    var expectedMessage = new String(MESSAGE_CREATED_BEFORE_WATCHING_START);
+    String expectedMessage = new String(MESSAGE_CREATED_BEFORE_WATCHING_START);
     List<String> nextMessages = topicWatching.poolNextMessages();
     assertEquals(1, nextMessages.size());
     assertEquals(expectedMessage, nextMessages.get(0));
@@ -73,8 +73,8 @@ public class TestKafkaTest extends TestBase {
     testKafka.sendMessage(testTopic, MESSAGE_CREATED_BEFORE_WATCHING_START);
 
     KafkaTopicWatching<String> topicWatching = getTopicWatching();
-    var message1 = MESSAGE_CREATED_AFTER_WATCHING_START;
-    var expectedMessage1 = new String(message1);
+    byte[] message1 = MESSAGE_CREATED_AFTER_WATCHING_START;
+    String expectedMessage1 = new String(message1);
     testKafka.sendMessage(testTopic, message1);
     testKafka.sendMessage(testTopic, message1);
     testKafka.sendMessage(testTopic, message1);
@@ -87,8 +87,8 @@ public class TestKafkaTest extends TestBase {
     assertEquals(expectedMessage1, nextMessages1.get(2));
     assertEquals(expectedMessage1, nextMessages1.get(3));
 
-    var message2 = "message created after watching 2".getBytes();
-    var expectedMessage2 = new String(message2);
+    byte[] message2 = "message created after watching 2".getBytes();
+    String expectedMessage2 = new String(message2);
     testKafka.sendMessage(testTopic, message2);
     testKafka.sendMessage(testTopic, message2);
     testKafka.sendMessage(testTopic, message2);
@@ -122,7 +122,7 @@ public class TestKafkaTest extends TestBase {
     for (int i = 1; i < 51; i++) {
       Assertions.assertEquals(
           Integer.valueOf(topicWatching.getAllFoundMessages().get(i - 1)),
-          Integer.valueOf(topicWatching.getAllFoundMessages().get(i)) - 1
+          Integer.parseInt(topicWatching.getAllFoundMessages().get(i)) - 1
       );
     }
 
