@@ -10,7 +10,7 @@
 
     <groupId>ru.hh.kafka.test</groupId>
     <artifactId>hh-kafka-test-utils</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.8</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -118,7 +118,7 @@
     <scm>
         <connection>scm:git:git@github.com:hhru/kafka-test-utils.git</connection>
         <developerConnection>scm:git:git@github.com:hhru/kafka-test-utils.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>hh-kafka-test-utils-0.0.8</tag>
     </scm>
 
 </project>
