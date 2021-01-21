@@ -10,7 +10,7 @@
 
     <groupId>ru.hh.kafka.test</groupId>
     <artifactId>hh-kafka-test-utils</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.10</version>
     <packaging>jar</packaging>
 
     <properties>
